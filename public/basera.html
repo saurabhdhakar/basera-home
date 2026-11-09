@@ -912,6 +912,34 @@ img{height:auto;}
 #commPage.room-mode .cat-page-head{background:var(--chat-surface);border-bottom:1px solid var(--line)}
 #commPage.room-mode .cat-page-head h2{font-size:20px;color:var(--chat-ink);font-weight:600}
 #commPage.room-mode .comm-body{padding:20px 18px 24px}
+#commPage.hostel-mode{--hp-ocean:oklch(0.52 0.14 235);--hp-ocean-soft:oklch(0.96 0.02 235);--hp-ink:oklch(0.24 0.03 240);--hp-line:oklch(0.86 0.01 240);background:oklch(1 0 0);color:var(--hp-ink)}
+#commPage.hostel-mode .cat-page-head{border-bottom:1px solid var(--hp-line)}
+#commPage.hostel-mode .cat-page-head h2{font-size:20px;font-weight:800;color:var(--hp-ink)}
+#commPage.hostel-mode .comm-body{padding:4px 18px 28px}
+#commPage.hostel-mode .hp-sec{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--hp-ocean);font-weight:800;margin:26px 0 2px}
+#commPage.hostel-mode .hp-sec:first-child{margin-top:16px}
+#commPage.hostel-mode .cf{padding-top:14px}
+#commPage.hostel-mode .cf label{font-size:14px;font-weight:700;color:var(--hp-ink);margin-bottom:4px}
+#commPage.hostel-mode .cf-tabs{display:flex;flex-wrap:wrap;gap:8px}
+#commPage.hostel-mode .cf-tabs.scroll{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-inline:-18px;padding:2px 18px}
+#commPage.hostel-mode .cf-tabs.scroll::-webkit-scrollbar{display:none}
+#commPage.hostel-mode .cf-tab{flex-shrink:0;min-width:0;display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:8px 16px;border:1.5px solid var(--hp-line);border-radius:999px;background:oklch(1 0 0);color:var(--hp-ink);font-size:14px;font-weight:600;white-space:nowrap;transition:background-color .22s ease,border-color .22s ease,color .22s ease,box-shadow .22s ease}
+#commPage.hostel-mode .cf-tab:hover{border-color:var(--hp-ocean)}
+#commPage.hostel-mode .cf-tab.on{background:var(--hp-ocean)!important;border-color:var(--hp-ocean)!important;color:oklch(1 0 0)!important;box-shadow:0 4px 12px -4px color-mix(in oklab,var(--hp-ocean) 55%,transparent)}
+#commPage.hostel-mode .cf-tab:focus-visible{outline:2px solid var(--hp-ocean);outline-offset:2px}
+#commPage.hostel-mode .hp-ck{width:16px;height:16px;border:1.5px solid currentColor;border-radius:50%;display:inline-grid;place-items:center;font-style:normal;font-size:10px;line-height:1}
+#commPage.hostel-mode .cf-tab.on .hp-ck::after{content:"✓";font-weight:900}
+#commPage.hostel-mode .cf input{border-bottom:1.5px solid var(--hp-line);font-size:16px;padding:10px 0}
+#commPage.hostel-mode .cf textarea{border:1.5px solid var(--hp-line);border-radius:12px;padding:12px;min-height:140px;font-size:15px}
+#commPage.hostel-mode .cf input:focus{border-bottom-color:var(--hp-ocean)}
+#commPage.hostel-mode .cf textarea:focus{border-color:var(--hp-ocean)}
+#commPage.hostel-mode .cf-err:empty{display:none}
+#commPage.hostel-mode .cf-meta{justify-content:flex-end;font-weight:500;color:oklch(0.55 0.015 240)}
+#commPage.hostel-mode .cf-err{margin-right:auto;color:oklch(0.58 0.2 27)}
+#commPage.hostel-mode .cf.err input,#commPage.hostel-mode .cf.err textarea{border-color:oklch(0.58 0.2 27)}
+#commPage.hostel-mode .comm-foot{padding:12px 18px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--hp-line);background:oklch(1 0 0)}
+#commPage.hostel-mode .comm-next{height:54px;border-radius:14px;font-size:17px;font-weight:800;color:oklch(1 0 0);background:linear-gradient(135deg,oklch(0.55 0.15 240),oklch(0.46 0.14 250));box-shadow:0 10px 24px -10px oklch(0.5 0.15 245 / 70%)}
+@media (prefers-reduced-motion:reduce){#commPage.hostel-mode .cf-tab{transition:none}}
 .room-heading{font-size:24px;font-weight:800;margin-bottom:4px}
 .room-subheading{font-size:16px;color:var(--muted);margin-bottom:18px}
 #commPage.room-mode .cf{padding:0;margin-bottom:14px}
@@ -3005,6 +3033,7 @@ document.getElementById('catGrid').addEventListener('click', function(e){
   var i = Number(b.getAttribute('data-group'));
   var c = CAT_PICKS[i]; if(!c) return;
   if(c.label === 'Flat / House'){ closeCatPage(); openCommPage('house'); return; }
+  if(c.label === 'Hostel / PG'){ closeCatPage(); openCommPage('hostel'); return; }
   if(c.label === 'Commercial Space'){ closeCatPage(); openCommPage(); return; }
   if(c.cats.length === 1){ catPostTarget(c.cats[0]); return; }
   var existing = document.querySelector('#catGrid .cat-sub');
@@ -3056,16 +3085,40 @@ var ROOM_FIELDS = [
   {k:'washroomType',label:SPEC.washroomType.label,chips:SPEC.washroomType.opts,req:true},
   {k:'adDesc',label:'Description',area:true,max:4096,ph:'Tell seekers about the place...'}
 ];
+var HOSTEL_FIELDS = [
+  {sec:'Category'},
+  {k:'category',label:'Select Category',chips:['Hostel','Paying Guest (PG)'],req:true},
+  {sec:'Room Configuration & Occupancy'},
+  {k:'acType',label:'Room Type',chips:['AC Room','Non-AC Room'],req:true},
+  {k:'sharing',label:'Sharing Capacity',chips:['Private Room (Single)','2-Sharing','3-Sharing','4+ Sharing / Dormitory'],req:true,scroll:true},
+  {k:'washroomType',label:'Washroom Type',chips:['Attached Washroom','Common Washroom'],req:true},
+  {sec:'Target Tenant & Management'},
+  {k:'allowedFor',label:'Allowed For',chips:['Boys','Girls','Co-ed','Anyone'],req:true},
+  {k:'managedBy',label:'Property Managed By',chips:['Owner / Malik','Manager'],req:true},
+  {sec:'Food & Mess Facilities'},
+  {k:'food',label:'Food Availability',chips:['Included in Rent','Charges Extra','No Food (Self Cook/Tiffin)'],req:true},
+  {k:'foodType',label:'Food Type Provided',chips:['Pure Veg','Veg & Non-Veg Both']},
+  {sec:'Amenities'},
+  {k:'roomAmenities',label:'Room Amenities',chips:['Bed','Mattress','Almirah','Study Table & Chair','Air Conditioner','Cooler','Geyser'],multi:true},
+  {k:'commonAmenities',label:'Common Area Amenities',chips:['Wi-Fi','Washing Machine','RO Purified Water','Power Backup'],multi:true},
+  {sec:'Pricing'},
+  {k:'price',label:'Monthly Rent (₹)',num:true,req:true,ph:'e.g. 6500'},
+  {sec:'Advertisement'},
+  {k:'adTitle',label:'Ad Title',text:true,req:true,max:70,ph:'e.g. Premium Girls PG near Metro Station with Food'},
+  {k:'adDesc',label:'Describe the Accommodation',area:true,req:true,max:4096,ph:'Mention nearby landmarks, college/coaching distance, cleanliness...'}
+];
 var comm = {};
 function escA(v){ return String(v).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
 function renderComm(){
   document.getElementById('commBody').innerHTML = (commMode==='room'?'<h3 class="room-heading">Properties</h3><p class="room-subheading">For Rent: Room</p>':'') + COMM_FIELDS.map(function(f){
+    if(f.sec) return '<h3 class="hp-sec">'+f.sec+'</h3>';
     var v = comm[f.k] || '', meta = '<div class="cf-meta"><span class="cf-err" data-err="'+f.k+'"></span>'+(f.max?'<span data-count="'+f.k+'">'+v.length+' / '+f.max+'</span>':'')+'</div>';
-    if(f.chips) return '<div class="cf" data-cf="'+f.k+'"><label>'+f.label+(f.req?' <span class="req">*</span>':'')+'</label><div class="cf-tabs" role="'+(f.multi?'group':'radiogroup')+'" aria-label="'+f.label+'">'+f.chips.map(function(t){var selected=f.multi?(v||[]).indexOf(t)>=0:v===t;return '<button type="button" class="cf-tab'+(selected?' on':'')+'" role="'+(f.multi?'checkbox':'radio')+'" aria-checked="'+selected+'" data-tab="'+f.k+'" data-val="'+escA(t)+'">'+(f.multi?(selected?'☑ ':'☐ '):'')+escA(t)+'</button>';}).join('')+'</div>'+meta+'</div>';
+    if(f.chips) return '<div class="cf" data-cf="'+f.k+'"><label>'+f.label+(f.req?' <span class="req">*</span>':'')+'</label><div class="cf-tabs'+(f.scroll?' scroll':'')+'" role="'+(f.multi?'group':'radiogroup')+'" aria-label="'+f.label+'">'+f.chips.map(function(t){var selected=f.multi?(v||[]).indexOf(t)>=0:v===t;return '<button type="button" class="cf-tab'+(selected?' on':'')+'" role="'+(f.multi?'checkbox':'radio')+'" aria-checked="'+selected+'" data-tab="'+f.k+'" data-val="'+escA(t)+'">'+(f.multi?(commMode==='hostel'?'<i class="hp-ck" aria-hidden="true"></i>':(selected?'☑ ':'☐ ')):'')+escA(t)+'</button>';}).join('')+'</div>'+meta+'</div>';
     if(f.opts) return '<div class="cf" data-cf="'+f.k+'"><label>'+f.label+'</label><button type="button" class="cf-line" data-pop="'+f.k+'">'+(v?'<span>'+escA(v)+'</span>':'<span class="ph">&nbsp;</span>')+'<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 9.5l6 6 6-6" stroke="#5a5a5a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>'+meta+'</div>';
     if(f.tabs) return '<div class="cf" data-cf="'+f.k+'"><label>'+f.label+'</label><div class="cf-tabs">'+f.tabs.map(function(t){ return '<button type="button" class="cf-tab'+(v===t?' on':'')+'" data-tab="'+f.k+'" data-val="'+escA(t)+'">'+escA(t)+'</button>'; }).join('')+'</div>'+meta+'</div>';
-    if(f.area) return '<div class="cf" data-cf="'+f.k+'"><label>'+f.label+'</label><textarea data-in="'+f.k+'" maxlength="'+f.max+'" placeholder="'+escA(f.ph)+'">'+escA(v)+'</textarea>'+meta+'</div>';
-    return '<div class="cf" data-cf="'+f.k+'"><label>'+f.label+'</label><input data-in="'+f.k+'" '+(f.num?'type="number" inputmode="numeric" min="0"':'type="text" maxlength="'+f.max+'"')+(f.ph?' placeholder="'+escA(f.ph)+'"':'')+' value="'+escA(v)+'">'+meta+'</div>';
+    var rq=(commMode==='hostel'&&f.req)?' <span class="req">*</span>':'';
+    if(f.area) return '<div class="cf" data-cf="'+f.k+'"><label>'+f.label+rq+'</label><textarea data-in="'+f.k+'" maxlength="'+f.max+'" placeholder="'+escA(f.ph)+'">'+escA(v)+'</textarea>'+meta+'</div>';
+    return '<div class="cf" data-cf="'+f.k+'"><label>'+f.label+rq+'</label><input data-in="'+f.k+'" '+(f.num?'type="number" inputmode="numeric" min="0"':'type="text" maxlength="'+f.max+'"')+(f.ph?' placeholder="'+escA(f.ph)+'"':'')+' value="'+escA(v)+'">'+meta+'</div>';
   }).join('');
 }
 function clearCommErr(k){
@@ -3087,8 +3140,9 @@ function closeCommPop(){
   var d = document.getElementById('commDlg'); d.classList.remove('show');
   setTimeout(function(){ d.classList.remove('open'); }, 180); commPopKey = null;
 }
-function openCommPage(mode){ commMode = mode === 'room' ? 'room' : mode === 'house' ? 'house' : 'comm'; COMM_FIELDS = commMode === 'room' ? ROOM_FIELDS : commMode === 'house' ? HOUSE_FIELDS : COMM_FIELDS_COMM;
+function openCommPage(mode){ commMode = mode === 'room' ? 'room' : mode === 'house' ? 'house' : mode === 'hostel' ? 'hostel' : 'comm'; COMM_FIELDS = commMode === 'room' ? ROOM_FIELDS : commMode === 'hostel' ? HOSTEL_FIELDS : commMode === 'house' ? HOUSE_FIELDS : COMM_FIELDS_COMM;
   document.getElementById('commPage').classList.toggle('room-mode',commMode==='room');
+  document.getElementById('commPage').classList.toggle('hostel-mode',commMode==='hostel');
   document.getElementById('commDlgTitle').textContent = commMode === 'house' ? 'For Rent: Houses & Apartments' : 'For Rent: Shops & Offices';
   comm = commMode === 'house' ? {bachelors:'No'} : {}; renderComm(); document.getElementById('commPage').classList.add('open'); document.getElementById('commBody').scrollTop = 0; }
 function closeCommPage(){ document.getElementById('commPage').classList.remove('open'); }
@@ -3106,7 +3160,7 @@ var commBody = document.getElementById('commBody');
 commBody.addEventListener('click', function(e){
   var t = e.target.closest('[data-tab]');
   if(t){ var tk = t.getAttribute('data-tab'), tv = t.getAttribute('data-val'), tf = COMM_FIELDS.find(function(f){return f.k===tk;});
-    if(tf && tf.multi){ var values=comm[tk]||[], pos=values.indexOf(tv); if(pos>=0) values.splice(pos,1); else values.push(tv); comm[tk]=values; var selected=values.indexOf(tv)>=0; t.classList.toggle('on',selected); t.setAttribute('aria-checked',String(selected)); t.textContent=(selected?'☑ ':'☐ ')+tv; }
+    if(tf && tf.multi){ var values=comm[tk]||[], pos=values.indexOf(tv); if(pos>=0) values.splice(pos,1); else values.push(tv); comm[tk]=values; var selected=values.indexOf(tv)>=0; t.classList.toggle('on',selected); t.setAttribute('aria-checked',String(selected)); if(commMode!=='hostel') t.textContent=(selected?'☑ ':'☐ ')+tv; }
     else {comm[tk]=tv;t.parentNode.querySelectorAll('.cf-tab').forEach(function(x){x.classList.toggle('on',x===t);x.setAttribute('aria-checked',String(x===t));});}
     clearCommErr(tk); return; }
   var b = e.target.closest('[data-pop]'); if(!b) return;
@@ -3126,6 +3180,12 @@ function validateComm(){
     ROOM_FIELDS.forEach(function(f){if(f.req && !(String(comm[f.k]||'').trim())) bad(f.k,'Please complete this field.');});
     if(!(Number(comm.price)>0)) bad('price','Enter a monthly rent greater than zero.');
     if(first){var field=commBody.querySelector('[data-cf="'+first+'"]');if(field) field.scrollIntoView({block:'center'});}
+    return ok;
+  }
+  if(commMode==='hostel'){
+    HOSTEL_FIELDS.forEach(function(f){if(f.k && f.req && !(String(comm[f.k]||'').trim())) bad(f.k,'Please complete this field.');});
+    if(comm.price && !(Number(comm.price)>0)) bad('price','Enter a monthly rent greater than zero.');
+    if(first){var hf=commBody.querySelector('[data-cf="'+first+'"]');if(hf) hf.scrollIntoView({block:'center'});}
     return ok;
   }
   COMM_FIELDS.forEach(function(f){ if(f.opts && f.req && !comm[f.k]) bad(f.k, ''); });
@@ -3151,6 +3211,15 @@ document.getElementById('commNext').addEventListener('click', function(){
     document.getElementById('pPrice').value=roomData.price;
     document.getElementById('pDesc').value=roomData.adDesc||'';
     openModal('postModal');
+    return;
+  }
+  if(commMode === 'hostel'){
+    var pd = Object.assign({}, comm, {mode:'hostel'});
+    closeCommPage(); catPostTarget(pd.category === 'Hostel' ? 'hostel' : 'pg'); state.comm = pd;
+    document.getElementById('pTitle').value = pd.adTitle.trim();
+    document.getElementById('pPrice').value = pd.price;
+    document.getElementById('pDesc').value = pd.adDesc.trim();
+    document.getElementById('pSpecs').style.display = 'none';
     return;
   }
   if(commMode === 'house'){
@@ -3191,6 +3260,7 @@ function resetPostForm(){
 }
 function collectSpecs(){
   function nOr(v){ return v ? Number(v) : null; }
+  if(state.comm && state.comm.mode === 'hostel'){ var hp = state.comm; return { specs: { category:hp.category, acType:hp.acType, sharing:hp.sharing, washroomType:hp.washroomType, allowedFor:hp.allowedFor, managedBy:hp.managedBy, food:hp.food, foodType:hp.foodType||'', amenities:(hp.roomAmenities||[]).concat(hp.commonAmenities||[]) }, missing:null }; }
   if(state.comm && state.comm.mode === 'house'){ var h = state.comm; return { specs: { houseType:h.type, bhkType:h.bhk === '4+' ? '4+ BHK' : h.bhk+' BHK', furnish:h.furnishing === 'Furnished' ? 'Fully Furnished' : h.furnishing, listedByType:h.listedBy, facing:h.facing||null, waterSupply:h.waterSupply||null, superArea:Number(h.superArea), carpetArea:Number(h.carpetArea), bachelorsAllowed:h.bachelors, maintenance:nOr(h.maintenance), totalFloors:nOr(h.totalFloors), floorNo:nOr(h.floorNo), carParking:h.carParking||null, projectName:h.projectName||null }, missing:null }; }
   if(state.comm){ var c = state.comm; return { specs: { commType:c.type, furnish:c.furnishing, listedByType:c.listedBy, superArea:Number(c.superArea), carpetArea:Number(c.carpetArea), maintenance:c.maintenance?Number(c.maintenance):null, carParking:c.carParking, washrooms:c.washrooms?Number(c.washrooms):null, waterSupply:c.waterSupply, sizeSqft:Number(c.superArea) }, missing:null }; }
   var out = {}, missing = null;
