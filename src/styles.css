@@ -37,6 +37,8 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
+  --font-display: "Fraunces", serif;
+  --font-sans: "Karla", sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -73,19 +75,21 @@
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
+  --radius: 0.25rem;
+  --background: oklch(0.965 0.018 75);
+  --foreground: oklch(0.25 0.04 40);
+  --terracotta: oklch(0.58 0.14 40);
+  --gradient-veil: linear-gradient(to top, oklch(0.2 0.04 40 / 0.85), transparent 60%);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.129 0.042 264.695);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
+  --primary: oklch(0.58 0.14 40);
+  --primary-foreground: oklch(0.97 0.02 75);
+  --secondary: oklch(0.92 0.03 75);
+  --secondary-foreground: oklch(0.25 0.04 40);
+  --muted: oklch(0.92 0.03 75);
+  --muted-foreground: oklch(0.48 0.04 45);
   --accent: oklch(0.968 0.007 247.896);
   --accent-foreground: oklch(0.208 0.042 265.755);
   --destructive: oklch(0.577 0.245 27.325);
@@ -151,5 +155,11 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: var(--font-sans);
   }
+  h1, h2, h3 { font-family: var(--font-display); }
+}
+
+@utility bg-veil {
+  background-image: var(--gradient-veil);
 }
