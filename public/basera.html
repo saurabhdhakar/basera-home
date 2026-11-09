@@ -3260,6 +3260,7 @@ function resetPostForm(){
 }
 function collectSpecs(){
   function nOr(v){ return v ? Number(v) : null; }
+  if(state.comm && state.comm.mode === 'hostel'){ var hp = state.comm; return { specs: { category:hp.category, acType:hp.acType, sharing:hp.sharing, washroomType:hp.washroomType, allowedFor:hp.allowedFor, managedBy:hp.managedBy, food:hp.food, foodType:hp.foodType||'', amenities:(hp.roomAmenities||[]).concat(hp.commonAmenities||[]) }, missing:null }; }
   if(state.comm && state.comm.mode === 'house'){ var h = state.comm; return { specs: { houseType:h.type, bhkType:h.bhk === '4+' ? '4+ BHK' : h.bhk+' BHK', furnish:h.furnishing === 'Furnished' ? 'Fully Furnished' : h.furnishing, listedByType:h.listedBy, facing:h.facing||null, waterSupply:h.waterSupply||null, superArea:Number(h.superArea), carpetArea:Number(h.carpetArea), bachelorsAllowed:h.bachelors, maintenance:nOr(h.maintenance), totalFloors:nOr(h.totalFloors), floorNo:nOr(h.floorNo), carParking:h.carParking||null, projectName:h.projectName||null }, missing:null }; }
   if(state.comm){ var c = state.comm; return { specs: { commType:c.type, furnish:c.furnishing, listedByType:c.listedBy, superArea:Number(c.superArea), carpetArea:Number(c.carpetArea), maintenance:c.maintenance?Number(c.maintenance):null, carParking:c.carParking, washrooms:c.washrooms?Number(c.washrooms):null, waterSupply:c.waterSupply, sizeSqft:Number(c.superArea) }, missing:null }; }
   var out = {}, missing = null;
