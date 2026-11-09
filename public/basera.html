@@ -3039,11 +3039,11 @@ document.getElementById('pSpecs').addEventListener('click', function(e){
 document.getElementById('pSpecs').addEventListener('input', function(e){
   var k = e.target.getAttribute('data-spec-num'); if(k) state.specs[k] = e.target.value;
 });
-function catPostTarget(cat){
+function catPostTarget(cat, fromComm){
   closeCatPage();
   if(cat === 'room'){ openCommPage('room'); return; }
   if(catPageFromForm){ selectPostCat(cat); return; }
-  state.photos = []; state.photoFiles = []; renderPhotoRow(); resetPostForm(); selectPostCat(cat); openModal('postModal');
+  state.photos = []; state.photoFiles = []; renderPhotoRow(); resetPostForm(); selectPostCat(cat); openPhotoStep(fromComm);
 }
 function closeCatSubs(){ document.querySelectorAll('#catGrid .cat-sub').forEach(function(n){ n.remove(); }); }
 function openCatSub(i, cell){
@@ -3248,12 +3248,12 @@ document.getElementById('commNext').addEventListener('click', function(){
     document.getElementById('pTitle').value=roomData.adTitle.trim();
     document.getElementById('pPrice').value=roomData.price;
     document.getElementById('pDesc').value=roomData.adDesc||'';
-    openModal('postModal');
+    if(catPageFromForm) openModal('postModal'); else openPhotoStep(true);
     return;
   }
   if(commMode === 'hostel'){
     var pd = Object.assign({}, comm, {mode:'hostel'});
-    closeCommPage(); catPostTarget(pd.category === 'Hostel' ? 'hostel' : 'pg'); state.comm = pd;
+    closeCommPage(); catPostTarget(pd.category === 'Hostel' ? 'hostel' : 'pg', true); state.comm = pd;
     document.getElementById('pTitle').value = pd.adTitle.trim();
     document.getElementById('pPrice').value = pd.price;
     document.getElementById('pDesc').value = pd.adDesc.trim();
@@ -3263,7 +3263,7 @@ document.getElementById('commNext').addEventListener('click', function(){
   if(commMode === 'house'){
     var hcat = (comm.type === 'Flats / Apartments' || comm.type === 'Independent / Builder Floors') ? 'flat' : 'house';
     var hd = Object.assign({}, comm, {mode:'house'});
-    closeCommPage(); catPostTarget(hcat); state.comm = hd;
+    closeCommPage(); catPostTarget(hcat, true); state.comm = hd;
     document.getElementById('pTitle').value = hd.adTitle.trim();
     document.getElementById('pDesc').value = hd.adDesc.trim();
     document.getElementById('pSpecs').style.display = 'none';
@@ -3272,7 +3272,7 @@ document.getElementById('commNext').addEventListener('click', function(){
   var cat = comm.type === 'Shops' ? 'shop' : comm.type === 'Warehouse' ? 'godown' : 'office';
   var data = Object.assign({}, comm);
   closeCommPage();
-  catPostTarget(cat);
+  catPostTarget(cat, true);
   state.comm = data;
   document.getElementById('pTitle').value = data.adTitle.trim();
   document.getElementById('pDesc').value = data.adDesc.trim();
@@ -3348,8 +3348,59 @@ function choosePhotos(){ if(!photoReading && state.photos.length < 5) document.g
 document.getElementById('uploadTrigger').addEventListener('click', choosePhotos);
 document.getElementById('photoInput').addEventListener('change', function(e){
   var input = e.target;
-  var files = Array.prototype.slice.call(input.files).filter(function(file){ return file.type.indexOf('image/') === 0; }).slice(0, 5 - state.photos.length);
+  var list = input.files;
   input.value = '';
+  addPhotoFiles(list);
+});
+function pickImageFiles(list){
+  return Array.prototype.slice.call(list || []).filter(function(file){ return (file.type || '').indexOf('image/') === 0; });
+}
+// OLX-style "Upload your photos" step: opens the picker straight away and only shows the dashboard if the picker is dismissed.
+var photoStepFromComm = false;
+var photoStepWatch = null;
+function stopPhotoPickerWatch(){ if(photoStepWatch){ photoStepWatch(); photoStepWatch = null; } }
+function revealPhotoStep(){ stopPhotoPickerWatch(); document.getElementById('photoStep').classList.remove('waiting'); }
+function launchPhotoPicker(id){
+  stopPhotoPickerWatch();
+  var left = false, backTimer = null;
+  function onBlur(){ left = true; }
+  function onReturn(){ if(!left) return; clearTimeout(backTimer); backTimer = setTimeout(revealPhotoStep, 900); }
+  function onVisibility(){ if(document.visibilityState === 'hidden') left = true; else onReturn(); }
+  var guard = setTimeout(function(){ if(!left) revealPhotoStep(); }, 1500);
+  window.addEventListener('blur', onBlur); window.addEventListener('focus', onReturn); document.addEventListener('visibilitychange', onVisibility);
+  photoStepWatch = function(){ clearTimeout(guard); clearTimeout(backTimer); window.removeEventListener('blur', onBlur); window.removeEventListener('focus', onReturn); document.removeEventListener('visibilitychange', onVisibility); };
+  document.getElementById(id).click();
+}
+function openPhotoStep(fromComm){
+  photoStepFromComm = !!fromComm;
+  document.getElementById('photoStepStatus').textContent = '';
+  document.getElementById('photoStep').classList.add('open', 'waiting');
+  launchPhotoPicker('photoStepInput');
+}
+function closePhotoStep(){ stopPhotoPickerWatch(); document.getElementById('photoStep').classList.remove('open', 'waiting'); }
+function onPhotoStepFiles(e){
+  var input = e.target;
+  var list = pickImageFiles(input.files);
+  input.value = '';
+  if(!list.length){ revealPhotoStep(); if(input.files && input.files.length) document.getElementById('photoStepStatus').textContent = 'Please choose image files.'; return; }
+  closePhotoStep();
+  openModal('postModal');
+  addPhotoFiles(list);
+}
+['photoStepInput', 'photoStepCapture'].forEach(function(id){
+  var input = document.getElementById(id);
+  input.addEventListener('change', onPhotoStepFiles);
+  input.addEventListener('cancel', revealPhotoStep);
+});
+document.getElementById('photoStepFolders').addEventListener('click', function(){ launchPhotoPicker('photoStepInput'); });
+document.getElementById('photoStepAllow').addEventListener('click', function(){ launchPhotoPicker('photoStepInput'); });
+document.getElementById('photoStepCamera').addEventListener('click', function(){ launchPhotoPicker('photoStepCapture'); });
+document.getElementById('photoStepBack').addEventListener('click', function(){
+  closePhotoStep();
+  if(photoStepFromComm) document.getElementById('commPage').classList.add('open');
+});
+function addPhotoFiles(list){
+  var files = pickImageFiles(list).slice(0, 5 - state.photos.length);
   if(!files.length || photoReading) return;
   photoReading = true;
   var version = photoReadVersion;
