@@ -7,24 +7,19 @@
 >
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
-
-## What Lovable manages
-
-Rules outside this block are the project's own. Change the pieces below in
-Lovable, not by hand. With the [Lovable MCP](https://mcp.lovable.dev)
-connected, `send_message` asks Lovable to do it; otherwise ask the user to
-use the editor.
-
-- **Database.** Do not add or edit `supabase/migrations/` or `drizzle/`.
-  Ask Lovable to change the schema.
-- **Generated files.** Do not edit a file whose header says it is automatically
-  generated.
-- **AI gateway.** Keep model calls on Lovable's gateway, and keep
-  `LOVABLE_API_KEY` out of browser code.
-- **Connectors.** Lovable provides native connectors. `list_connectors` shows
-  which are enabled; `add_connector` only returns the dashboard link. When a
-  connector is enabled, calls go through the connector gateway and need
-  `LOVABLE_API_KEY`. When Lovable does not provide one, users can bring their
-  own key and store it in Secrets.
-- **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+- Keep pre-home welcome and sign-in views in PreHomeAuth, with email entry separate from method selection, so the existing marketplace and session flow stay intact.
+- Legal sign-in links open accessible dialogs until official documents are supplied; never invent contractual policies.
+- Keep the splash timer and cleanup in PreHomeAuth; reuse the transparent logo and scope light tokens to all initial authentication views so marketplace theming remains independent.
+
+- Firebase browser authentication lives in src/lib/firebase-auth.ts and initializes only with complete VITE_FIREBASE_* configuration; never fabricate credentials or use Firebase identity as Cloud authorization.
+- Preserve legacy Cloud session handling until Firebase is configured; Firebase session subscriptions then own pre-home entry so reloads retain Firebase login.
+- Keep location data and optional selection headings in src/data/locations.ts; key rendered rows by name plus position so supplied duplicate names remain distinct.
+- Ola location selection uses a shared React context and a narrow document event bridge to the embedded marketplace, so pre-home and marketplace selections share validated coordinates without replacing legacy authentication.
+- Keep Ola Places calls in server functions through the linked Ola connector; gateway credentials stay server-only to prevent browser exposure.
+- Render property maps with dynamically imported MapLibre and an allowlisted same-origin Ola vector resource proxy; rewrite style/TileJSON resources so fonts, sprites and tiles never expose credentials.
+- Use RoomLocationBridge portals and document events for embedded room form and detail maps; persist selected address and coordinates with each listing, never substitute viewer or city-centre coordinates.
+- Home banners use public read-only Cloud home_banners rows and BannerBridge document events; keep the reusable browser carousel in public/banner-slider.js so banner updates do not depend on legacy Firebase configuration or change other ad units.
+- Keep property details presentation scoped to the embedded marketplace with browser-safe property data helpers; preserve RoomLocationBridge map events and existing call/chat handlers so redesigns do not alter session or contact rules.
+- Route the Room category through the shared details page with inline chips; transfer its values into the existing posting modal and specs payload so Next never publishes a listing.
