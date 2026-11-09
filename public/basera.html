@@ -959,6 +959,7 @@ img{height:auto;}
 </style>
 <link rel="stylesheet" href="/property-details.css">
 <link rel="stylesheet" href="/property-posting.css">
+<link rel="stylesheet" href="/photo-step.css">
 </head>
 <body>
 
@@ -1113,6 +1114,43 @@ img{height:auto;}
   <div class="comm-body" id="commBody"></div>
   <div class="comm-foot"><button type="button" class="comm-next" id="commNext">Next</button></div>
   <div class="comm-dlg" id="commDlg" role="dialog" aria-modal="true"><div class="comm-dlg-box"><div class="comm-dlg-title" id="commDlgTitle">For Rent: Shops &amp; Offices</div><div class="comm-dlg-sub" id="commDlgSub"></div><div id="commDlgOpts"></div><div class="comm-dlg-act"><button type="button" id="commDlgCancel">CANCEL</button></div></div></div>
+</div>
+<div class="photo-step" id="photoStep" role="dialog" aria-modal="true" aria-labelledby="photoStepTitle">
+  <div class="ps-head"><button type="button" class="ps-back" id="photoStepBack" aria-label="Back"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 12H4.5M10.5 5.5 4 12l6.5 6.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><h2 id="photoStepTitle">Upload your photos</h2></div>
+  <div class="ps-content">
+    <div class="ps-body">
+      <div class="ps-art" aria-hidden="true">
+        <span class="ps-blob"></span>
+        <svg class="ps-spark l" viewBox="0 0 34 40" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"><path d="M14 4l8 12M4 22l14 3M8 36l12-5"/></svg>
+        <div class="ps-card l"><img src="/assets/photo-step/house.jpg" alt="" width="360" height="360"></div>
+        <div class="ps-card c"><img src="/assets/photo-step/bedroom.jpg" alt="" width="360" height="360"></div>
+        <div class="ps-card r"><img src="/assets/photo-step/camera.jpg" alt="" width="360" height="360"></div>
+        <svg class="ps-spark r" viewBox="0 0 34 40" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"><path d="M14 4l8 12M4 22l14 3M8 36l12-5"/></svg>
+      </div>
+      <p class="ps-copy">Uploading more photos increases your chance of closing a deal</p>
+      <div class="ps-banner">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="2" y="3" width="20" height="18" rx="3"/><circle cx="16.5" cy="8.5" r="2" fill="var(--ps-banner)"/><path d="M4 18.5l5.5-7 4 5 2.5-3 4 5z" fill="var(--ps-banner)"/></svg>
+        <p>You have granted some parts of the photos</p>
+        <button type="button" class="ps-allow" id="photoStepAllow">ALLOW</button>
+      </div>
+      <div class="ps-grid">
+        <button type="button" class="ps-btn" id="photoStepCamera"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9 3.5h6l1.6 2.5H20a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h3.4z"/><circle cx="12" cy="13" r="4.2" fill="var(--ps-green)"/><circle cx="12" cy="13" r="2.6"/></svg>TAKE A PICTURE</button>
+        <button type="button" class="ps-btn" id="photoStepFolders"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M2 6.5A2.5 2.5 0 0 1 4.5 4H9l2 2.5h8.5A2.5 2.5 0 0 1 22 9v9a2.5 2.5 0 0 1-2.5 2.5h-15A2.5 2.5 0 0 1 2 18z"/></svg>FOLDERS</button>
+      </div>
+      <p class="ps-status" id="photoStepStatus" role="status"></p>
+    </div>
+    <svg class="ps-wave" viewBox="0 0 400 120" preserveAspectRatio="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="psWaveGreen" x1="0" x2="1"><stop offset="0" stop-color="oklch(0.93 0.06 145)"/><stop offset="1" stop-color="oklch(0.97 0.03 120)"/></linearGradient>
+        <linearGradient id="psWaveWarm" x1="0" x2="1"><stop offset="0" stop-color="oklch(0.95 0.05 85)"/><stop offset="1" stop-color="oklch(0.78 0.16 65)"/></linearGradient>
+      </defs>
+      <path d="M0 40C80 10 150 70 240 50S360 20 400 30V120H0z" fill="oklch(0.96 0.04 145)"/>
+      <path d="M0 70C90 50 160 95 250 80S350 30 400 10V120H0z" fill="url(#psWaveWarm)"/>
+      <path d="M0 80C70 60 150 100 230 98S330 110 400 90V120H0z" fill="url(#psWaveGreen)" opacity=".9"/>
+    </svg>
+  </div>
+  <input type="file" id="photoStepInput" accept="image/*" multiple hidden aria-label="Choose property photos">
+  <input type="file" id="photoStepCapture" accept="image/*" capture="environment" hidden aria-label="Take a property photo">
 </div>
 <div class="modal-overlay" id="detailModal">
   <div class="sheet" id="detailSheet" role="dialog" aria-modal="true" aria-labelledby="propertyDetailTitle" tabindex="-1"></div>
