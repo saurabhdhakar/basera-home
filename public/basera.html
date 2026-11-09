@@ -959,6 +959,7 @@ img{height:auto;}
 </style>
 <link rel="stylesheet" href="/property-details.css">
 <link rel="stylesheet" href="/property-posting.css">
+<link rel="stylesheet" href="/photo-step.css">
 </head>
 <body>
 
@@ -1113,6 +1114,43 @@ img{height:auto;}
   <div class="comm-body" id="commBody"></div>
   <div class="comm-foot"><button type="button" class="comm-next" id="commNext">Next</button></div>
   <div class="comm-dlg" id="commDlg" role="dialog" aria-modal="true"><div class="comm-dlg-box"><div class="comm-dlg-title" id="commDlgTitle">For Rent: Shops &amp; Offices</div><div class="comm-dlg-sub" id="commDlgSub"></div><div id="commDlgOpts"></div><div class="comm-dlg-act"><button type="button" id="commDlgCancel">CANCEL</button></div></div></div>
+</div>
+<div class="photo-step" id="photoStep" role="dialog" aria-modal="true" aria-labelledby="photoStepTitle">
+  <div class="ps-head"><button type="button" class="ps-back" id="photoStepBack" aria-label="Back"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 12H4.5M10.5 5.5 4 12l6.5 6.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><h2 id="photoStepTitle">Upload your photos</h2></div>
+  <div class="ps-content">
+    <div class="ps-body">
+      <div class="ps-art" aria-hidden="true">
+        <span class="ps-blob"></span>
+        <svg class="ps-spark l" viewBox="0 0 34 40" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"><path d="M14 4l8 12M4 22l14 3M8 36l12-5"/></svg>
+        <div class="ps-card l"><img src="/assets/photo-step/house.jpg" alt="" width="360" height="360"></div>
+        <div class="ps-card c"><img src="/assets/photo-step/bedroom.jpg" alt="" width="360" height="360"></div>
+        <div class="ps-card r"><img src="/assets/photo-step/camera.jpg" alt="" width="360" height="360"></div>
+        <svg class="ps-spark r" viewBox="0 0 34 40" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"><path d="M14 4l8 12M4 22l14 3M8 36l12-5"/></svg>
+      </div>
+      <p class="ps-copy">Uploading more photos increases your chance of closing a deal</p>
+      <div class="ps-banner">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="2" y="3" width="20" height="18" rx="3"/><circle cx="16.5" cy="8.5" r="2" fill="var(--ps-banner)"/><path d="M4 18.5l5.5-7 4 5 2.5-3 4 5z" fill="var(--ps-banner)"/></svg>
+        <p>You have granted some parts of the photos</p>
+        <button type="button" class="ps-allow" id="photoStepAllow">ALLOW</button>
+      </div>
+      <div class="ps-grid">
+        <button type="button" class="ps-btn" id="photoStepCamera"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9 3.5h6l1.6 2.5H20a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h3.4z"/><circle cx="12" cy="13" r="4.2" fill="var(--ps-green)"/><circle cx="12" cy="13" r="2.6"/></svg>TAKE A PICTURE</button>
+        <button type="button" class="ps-btn" id="photoStepFolders"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M2 6.5A2.5 2.5 0 0 1 4.5 4H9l2 2.5h8.5A2.5 2.5 0 0 1 22 9v9a2.5 2.5 0 0 1-2.5 2.5h-15A2.5 2.5 0 0 1 2 18z"/></svg>FOLDERS</button>
+      </div>
+      <p class="ps-status" id="photoStepStatus" role="status"></p>
+    </div>
+    <svg class="ps-wave" viewBox="0 0 400 120" preserveAspectRatio="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="psWaveGreen" x1="0" x2="1"><stop offset="0" stop-color="oklch(0.93 0.06 145)"/><stop offset="1" stop-color="oklch(0.97 0.03 120)"/></linearGradient>
+        <linearGradient id="psWaveWarm" x1="0" x2="1"><stop offset="0" stop-color="oklch(0.95 0.05 85)"/><stop offset="1" stop-color="oklch(0.78 0.16 65)"/></linearGradient>
+      </defs>
+      <path d="M0 40C80 10 150 70 240 50S360 20 400 30V120H0z" fill="oklch(0.96 0.04 145)"/>
+      <path d="M0 70C90 50 160 95 250 80S350 30 400 10V120H0z" fill="url(#psWaveWarm)"/>
+      <path d="M0 80C70 60 150 100 230 98S330 110 400 90V120H0z" fill="url(#psWaveGreen)" opacity=".9"/>
+    </svg>
+  </div>
+  <input type="file" id="photoStepInput" accept="image/*" multiple hidden aria-label="Choose property photos">
+  <input type="file" id="photoStepCapture" accept="image/*" capture="environment" hidden aria-label="Take a property photo">
 </div>
 <div class="modal-overlay" id="detailModal">
   <div class="sheet" id="detailSheet" role="dialog" aria-modal="true" aria-labelledby="propertyDetailTitle" tabindex="-1"></div>
@@ -3001,11 +3039,11 @@ document.getElementById('pSpecs').addEventListener('click', function(e){
 document.getElementById('pSpecs').addEventListener('input', function(e){
   var k = e.target.getAttribute('data-spec-num'); if(k) state.specs[k] = e.target.value;
 });
-function catPostTarget(cat){
+function catPostTarget(cat, fromComm){
   closeCatPage();
   if(cat === 'room'){ openCommPage('room'); return; }
   if(catPageFromForm){ selectPostCat(cat); return; }
-  state.photos = []; state.photoFiles = []; renderPhotoRow(); resetPostForm(); selectPostCat(cat); openModal('postModal');
+  state.photos = []; state.photoFiles = []; renderPhotoRow(); resetPostForm(); selectPostCat(cat); openPhotoStep(fromComm);
 }
 function closeCatSubs(){ document.querySelectorAll('#catGrid .cat-sub').forEach(function(n){ n.remove(); }); }
 function openCatSub(i, cell){
@@ -3210,12 +3248,12 @@ document.getElementById('commNext').addEventListener('click', function(){
     document.getElementById('pTitle').value=roomData.adTitle.trim();
     document.getElementById('pPrice').value=roomData.price;
     document.getElementById('pDesc').value=roomData.adDesc||'';
-    openModal('postModal');
+    if(catPageFromForm) openModal('postModal'); else openPhotoStep(true);
     return;
   }
   if(commMode === 'hostel'){
     var pd = Object.assign({}, comm, {mode:'hostel'});
-    closeCommPage(); catPostTarget(pd.category === 'Hostel' ? 'hostel' : 'pg'); state.comm = pd;
+    closeCommPage(); catPostTarget(pd.category === 'Hostel' ? 'hostel' : 'pg', true); state.comm = pd;
     document.getElementById('pTitle').value = pd.adTitle.trim();
     document.getElementById('pPrice').value = pd.price;
     document.getElementById('pDesc').value = pd.adDesc.trim();
@@ -3225,7 +3263,7 @@ document.getElementById('commNext').addEventListener('click', function(){
   if(commMode === 'house'){
     var hcat = (comm.type === 'Flats / Apartments' || comm.type === 'Independent / Builder Floors') ? 'flat' : 'house';
     var hd = Object.assign({}, comm, {mode:'house'});
-    closeCommPage(); catPostTarget(hcat); state.comm = hd;
+    closeCommPage(); catPostTarget(hcat, true); state.comm = hd;
     document.getElementById('pTitle').value = hd.adTitle.trim();
     document.getElementById('pDesc').value = hd.adDesc.trim();
     document.getElementById('pSpecs').style.display = 'none';
@@ -3234,7 +3272,7 @@ document.getElementById('commNext').addEventListener('click', function(){
   var cat = comm.type === 'Shops' ? 'shop' : comm.type === 'Warehouse' ? 'godown' : 'office';
   var data = Object.assign({}, comm);
   closeCommPage();
-  catPostTarget(cat);
+  catPostTarget(cat, true);
   state.comm = data;
   document.getElementById('pTitle').value = data.adTitle.trim();
   document.getElementById('pDesc').value = data.adDesc.trim();
@@ -3310,8 +3348,59 @@ function choosePhotos(){ if(!photoReading && state.photos.length < 5) document.g
 document.getElementById('uploadTrigger').addEventListener('click', choosePhotos);
 document.getElementById('photoInput').addEventListener('change', function(e){
   var input = e.target;
-  var files = Array.prototype.slice.call(input.files).filter(function(file){ return file.type.indexOf('image/') === 0; }).slice(0, 5 - state.photos.length);
+  var list = input.files;
   input.value = '';
+  addPhotoFiles(list);
+});
+function pickImageFiles(list){
+  return Array.prototype.slice.call(list || []).filter(function(file){ return (file.type || '').indexOf('image/') === 0; });
+}
+// OLX-style "Upload your photos" step: opens the picker straight away and only shows the dashboard if the picker is dismissed.
+var photoStepFromComm = false;
+var photoStepWatch = null;
+function stopPhotoPickerWatch(){ if(photoStepWatch){ photoStepWatch(); photoStepWatch = null; } }
+function revealPhotoStep(){ stopPhotoPickerWatch(); document.getElementById('photoStep').classList.remove('waiting'); }
+function launchPhotoPicker(id){
+  stopPhotoPickerWatch();
+  var left = false, backTimer = null;
+  function onBlur(){ left = true; }
+  function onReturn(){ if(!left) return; clearTimeout(backTimer); backTimer = setTimeout(revealPhotoStep, 900); }
+  function onVisibility(){ if(document.visibilityState === 'hidden') left = true; else onReturn(); }
+  var guard = setTimeout(function(){ if(!left) revealPhotoStep(); }, 1500);
+  window.addEventListener('blur', onBlur); window.addEventListener('focus', onReturn); document.addEventListener('visibilitychange', onVisibility);
+  photoStepWatch = function(){ clearTimeout(guard); clearTimeout(backTimer); window.removeEventListener('blur', onBlur); window.removeEventListener('focus', onReturn); document.removeEventListener('visibilitychange', onVisibility); };
+  document.getElementById(id).click();
+}
+function openPhotoStep(fromComm){
+  photoStepFromComm = !!fromComm;
+  document.getElementById('photoStepStatus').textContent = '';
+  document.getElementById('photoStep').classList.add('open', 'waiting');
+  launchPhotoPicker('photoStepInput');
+}
+function closePhotoStep(){ stopPhotoPickerWatch(); document.getElementById('photoStep').classList.remove('open', 'waiting'); }
+function onPhotoStepFiles(e){
+  var input = e.target;
+  var list = pickImageFiles(input.files);
+  input.value = '';
+  if(!list.length){ revealPhotoStep(); if(input.files && input.files.length) document.getElementById('photoStepStatus').textContent = 'Please choose image files.'; return; }
+  closePhotoStep();
+  openModal('postModal');
+  addPhotoFiles(list);
+}
+['photoStepInput', 'photoStepCapture'].forEach(function(id){
+  var input = document.getElementById(id);
+  input.addEventListener('change', onPhotoStepFiles);
+  input.addEventListener('cancel', revealPhotoStep);
+});
+document.getElementById('photoStepFolders').addEventListener('click', function(){ launchPhotoPicker('photoStepInput'); });
+document.getElementById('photoStepAllow').addEventListener('click', function(){ launchPhotoPicker('photoStepInput'); });
+document.getElementById('photoStepCamera').addEventListener('click', function(){ launchPhotoPicker('photoStepCapture'); });
+document.getElementById('photoStepBack').addEventListener('click', function(){
+  closePhotoStep();
+  if(photoStepFromComm) document.getElementById('commPage').classList.add('open');
+});
+function addPhotoFiles(list){
+  var files = pickImageFiles(list).slice(0, 5 - state.photos.length);
   if(!files.length || photoReading) return;
   photoReading = true;
   var version = photoReadVersion;
