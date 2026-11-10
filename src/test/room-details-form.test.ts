@@ -49,5 +49,42 @@ it('Next retains entered room details and multiple amenities without submitting'
   expect(hook.collectSpecs().specs['amenities']).toEqual(['Bed', 'Wi-Fi']);
   expect(hook.collectSpecs().specs['acType']).toBe('AC Room');
   expect(dom.window.document.querySelector<HTMLInputElement>('#pPrice')?.value).toBe('12000');
+  expect(dom.window.document.querySelector('#postModal')?.classList.contains('open')).toBe(false);
+});
+function photoStep() { return dom.window.document.querySelector('#photoStep')!; }
+function nextWithDetails() { choose('allowedFor', 'Anyone'); choose('washroomType', 'Common'); next(); }
+it('Next opens the photo picker automatically and keeps the dashboard hidden while it is open', () => {
+  let opened = 0;
+  dom.window.document.querySelector<HTMLInputElement>('#photoStepInput')!.addEventListener('click', () => { opened += 1; });
+  nextWithDetails();
+  expect(opened).toBe(1);
+  expect(photoStep().classList.contains('open')).toBe(true);
+  expect(photoStep().classList.contains('waiting')).toBe(true);
+});
+it('cancelling the automatic picker reveals the Upload your photos dashboard', () => {
+  nextWithDetails();
+  dom.window.document.querySelector('#photoStepInput')!.dispatchEvent(new dom.window.Event('cancel'));
+  expect(photoStep().classList.contains('waiting')).toBe(false);
+  expect(dom.window.document.querySelector('#postModal')?.classList.contains('open')).toBe(false);
+});
+it('choosing photos moves straight on to the posting form', () => {
+  nextWithDetails();
+  const input = dom.window.document.querySelector<HTMLInputElement>('#photoStepInput')!;
+  const file = new dom.window.File(['x'], 'room.jpg', { type: 'image/jpeg' });
+  Object.defineProperty(input, 'files', { value: [file], configurable: true });
+  input.dispatchEvent(new dom.window.Event('change'));
+  expect(photoStep().classList.contains('open')).toBe(false);
   expect(dom.window.document.querySelector('#postModal')?.classList.contains('open')).toBe(true);
+});
+it('FOLDERS reopens the picker and back returns to the filled details', () => {
+  nextWithDetails();
+  dom.window.document.querySelector('#photoStepInput')!.dispatchEvent(new dom.window.Event('cancel'));
+  let opened = 0;
+  dom.window.document.querySelector<HTMLInputElement>('#photoStepInput')!.addEventListener('click', () => { opened += 1; });
+  dom.window.document.querySelector<HTMLButtonElement>('#photoStepFolders')!.click();
+  expect(opened).toBe(1);
+  dom.window.document.querySelector<HTMLButtonElement>('#photoStepBack')!.click();
+  expect(photoStep().classList.contains('open')).toBe(false);
+  expect(dom.window.document.querySelector('#commPage')?.classList.contains('open')).toBe(true);
+  expect(dom.window.document.querySelector<HTMLInputElement>('#commBody [data-in="price"]')?.value).toBe('12000');
 });

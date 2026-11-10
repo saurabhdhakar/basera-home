@@ -3409,7 +3409,7 @@ function addPhotoFiles(list){
     if(version !== photoReadVersion) return;
     entries.forEach(function(entry){ state.photoFiles.push(entry.file); state.photos.push(entry.preview); });
   }).catch(function(){ showToast('Could not read photo. Please try another image.'); }).finally(function(){ photoReading = false; renderPhotoRow(); });
-});
+}
 function photoPreview(p, i, cover){
   return '<div class="'+(cover ? 'posting-cover' : 'photo-thumb')+'"><img src="'+p+'" alt="Property photo '+(i+1)+'"><span class="posting-watermark" aria-hidden="true">Basera</span>'+(cover ? '<span class="posting-cover-label">Main cover</span>' : '')+'<button type="button" class="rm" data-i="'+i+'" aria-label="Remove photo '+(i+1)+'">×</button></div>';
 }
