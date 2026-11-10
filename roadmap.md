@@ -1,4 +1,5 @@
 # Basera welcome and sign-in
+- [x] Add OLX-style green "Upload your photos" step after every category's Next: auto-open picker, chosen photos go straight to the posting form, cancel reveals the dashboard.
 - [ ] Redesign final posting with square photo slots, automatic Basera watermarks, clean property fields and fixed publish action; verify uploads and retained Room Next flow.
 - [x] Update Room details to the supplied reference, English labels, Allowed For, Washroom Type and blue Next; mobile Next flow carries selections into the existing posting form without submitting.
 - [x] Redesign property details with photo slider, rent/deposit, amenities, owner profile and fixed contact actions; mobile/desktop fixture checks passed. Live signed-in listing checks remain blocked by no Cloud auth users and missing Firebase setup.
