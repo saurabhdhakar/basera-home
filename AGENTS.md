@@ -23,3 +23,4 @@
 - Home banners use public read-only Cloud home_banners rows and BannerBridge document events; keep the reusable browser carousel in public/banner-slider.js so banner updates do not depend on legacy Firebase configuration or change other ad units.
 - Keep property details presentation scoped to the embedded marketplace with browser-safe property data helpers; preserve RoomLocationBridge map events and existing call/chat handlers so redesigns do not alter session or contact rules.
 - Route the Room category through the shared details page with inline chips; transfer its values into the existing posting modal and specs payload so Next never publishes a listing.
+- Every new listing reaches the posting modal through openPhotoStep: launch the picker inside the Next click so browsers allow it, and reveal the photo dashboard only after the picker is dismissed.
