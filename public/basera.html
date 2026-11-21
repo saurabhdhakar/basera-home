@@ -550,54 +550,77 @@ header.top{
 
 /* ---------------- PROFILE SCREEN ---------------- */
 .profile-screen{
-  position:fixed; inset:0; z-index:55; background:var(--bg);
+  position:fixed; inset:0; z-index:55; background:#F3F6F4;
   transform:translateX(100%); transition:transform .22s ease;
   overflow-y:auto; padding-bottom:calc(76px + env(safe-area-inset-bottom,0px));
 }
 .profile-screen.open{transform:translateX(0);}
 .profile-header{
-  background:var(--indigo); color:#fff; display:flex; align-items:center; gap:12px;
+  background:linear-gradient(135deg,#0A4D2E 0%,#0E6B41 60%,#12805A 100%); color:#fff; display:flex; align-items:center; gap:12px;
   padding:14px 16px; padding-top:calc(14px + env(safe-area-inset-top,0px));
   position:sticky; top:0; z-index:2;
 }
 .p-back{font-size:20px; cursor:pointer;}
 .profile-body{padding:18px 16px 8px;}
-.account-row{display:flex; flex-direction:column; gap:6px; margin-bottom:16px;}
-.account-row h2{font-size:19px; font-weight:800;}
-.edit-link{color:var(--marigold-dark); font-weight:700; font-size:13px; text-decoration:underline; cursor:pointer;}
+.account-row{display:flex; flex-direction:column; gap:4px; margin-bottom:14px;}
+.account-row h2{font-size:22px; font-weight:800; color:#14201A;}
+.edit-link{color:#E8890C; font-weight:700; font-size:13.5px; text-decoration:underline; cursor:pointer;}
 .user-card{
-  border:1.5px solid var(--marigold); border-radius:12px; padding:14px;
-  display:flex; align-items:center; gap:12px; margin-bottom:16px; background:var(--card);
+  border:1.5px solid #F0A63C; border-radius:14px; padding:16px 14px;
+  display:flex; align-items:center; gap:14px; margin-bottom:12px; background:#fff;
+  box-shadow:0 1px 4px rgba(20,32,26,.06);
 }
 .user-avatar{
-  width:56px; height:56px; border-radius:50%; background:var(--indigo);
+  width:56px; height:56px; border-radius:50%; background:#1B2A4A;
   display:flex; align-items:center; justify-content:center; flex:0 0 auto;
-  border:3px solid #DCE6FF;
 }
 .user-info{flex:1; min-width:0;}
-.user-info b{font-size:16.5px; display:block;}
-.user-info span{font-size:11.5px; color:var(--muted);}
-.edit-pencil{font-size:16px; color:var(--muted);}
+.user-info b{font-size:17px; display:block; color:#14201A;}
+.user-info span{font-size:11.5px; color:#6B7A72;}
+.edit-pencil{font-size:16px; color:#0E6B41;}
 .verify-banner{
-  display:flex; align-items:center; gap:10px; background:#FFF6DD; border:1px solid #F0DA9E;
-  border-radius:12px; padding:12px 14px; margin-bottom:8px; cursor:pointer;
+  display:flex; align-items:center; gap:12px; background:#E4F6EC; border:1px solid #BFE8D2;
+  border-radius:14px; padding:12px 14px; margin-bottom:10px; cursor:pointer;
 }
-:root:not([data-theme="light"]) .verify-banner{background:#3A3212; border-color:#5C4E1C;}
-.vb-icon{font-size:20px;}
-.vb-text{flex:1;}
-.vb-text b{font-size:13.5px; display:block;}
-.vb-text span{font-size:11px; color:var(--muted);}
-.vb-cta{font-size:12.5px; font-weight:800; color:var(--marigold-dark); white-space:nowrap;}
+:root:not([data-theme="light"]) .verify-banner{background:#123324; border-color:#1E4D36;}
+.vb-icon{font-size:20px; display:flex; align-items:center;}
+.vb-text{flex:1; min-width:0;}
+.vb-text b{font-size:13.5px; display:block; color:#14201A;}
+:root:not([data-theme="light"]) .vb-text b{color:#EAF5EF;}
+.vb-text span{font-size:11px; color:#6B7A72;}
+.vb-cta{
+  font-size:12.5px; font-weight:800; color:#fff; white-space:nowrap;
+  background:#0B5D3B; border-radius:999px; padding:9px 14px;
+}
 
 .premium-banner{
-  display:flex; align-items:center; gap:10px; background:linear-gradient(120deg,#2B2140,#3B2A5C);
-  border:1px solid #4A3770; border-radius:12px; padding:12px 14px; margin-bottom:8px; cursor:pointer;
+  display:flex; align-items:center; gap:12px; background:#FFF4E0;
+  border:1px solid #F5DFB5; border-radius:14px; padding:12px 14px; margin-bottom:12px; cursor:pointer;
 }
-.premium-banner .vb-text b{color:#FFD166; font-size:13.5px;}
-.premium-banner .vb-text span{color:#D8CFEE; font-size:11px;}
-.premium-banner .vb-cta{color:#FFD166;}
-.premium-banner.is-active{background:linear-gradient(120deg,#1E3A2E,#245039); border-color:#2E6B4C;}
-.premium-banner.is-active .vb-text b{color:#6FE3A5;}
+.premium-banner .vb-text b{color:#14201A; font-size:13.5px;}
+.premium-banner .vb-text span{color:#8A7A5C; font-size:11px;}
+.premium-banner .vb-cta{background:#F28C13; color:#fff;}
+.premium-banner.is-active{background:#E4F6EC; border-color:#BFE8D2;}
+.premium-banner.is-active .vb-text b{color:#0B5D3B;}
+
+/* Profile menu cards (My Account screen) */
+#profileScreen .menu-list{margin-top:4px; display:flex; flex-direction:column; gap:10px;}
+#profileScreen .menu-item{
+  display:flex; align-items:center; gap:14px; padding:14px; cursor:pointer;
+  background:#fff; border:1px solid #E4EAE6; border-radius:14px;
+  box-shadow:0 1px 3px rgba(20,32,26,.05);
+}
+:root:not([data-theme="light"]) #profileScreen .menu-item{background:#182420; border-color:#26332D;}
+#profileScreen .menu-item.elite-buyer{background:#E4F6EC; border-color:#BFE8D2;}
+:root:not([data-theme="light"]) #profileScreen .menu-item.elite-buyer{background:#123324; border-color:#1E4D36;}
+#profileScreen .mi-icon{font-size:0; width:26px; text-align:center; flex:0 0 auto; display:flex; align-items:center; justify-content:center;}
+#profileScreen .mi-text b{font-size:14.5px; display:block; font-weight:700; color:#14201A;}
+:root:not([data-theme="light"]) #profileScreen .mi-text b{color:#EAF5EF;}
+#profileScreen .mi-text span{font-size:11.5px; color:#6B7A72;}
+#profileScreen .mi-chev{color:#9AA8A0; font-size:20px; font-weight:300;}
+#profileScreen .new-badge{background:#F28C13; color:#fff; font-size:9.5px; font-weight:800; padding:2px 7px; border-radius:999px; vertical-align:middle; margin-left:4px;}
+#profileScreen .no-sub-note{display:flex; gap:8px; align-items:flex-start; font-size:11.5px; color:#6B7A72; line-height:1.5; padding:16px 4px 10px;}
+#profileScreen .no-sub-note svg{flex:0 0 auto; margin-top:1px;}
 
 .order-row{
   background:var(--card); border:1px solid var(--line); border-radius:10px; padding:12px 14px; margin-bottom:10px;
@@ -1175,40 +1198,40 @@ img{height:auto;}
     </div>
 
     <div class="verify-banner">
-      <span class="vb-icon">🛡️</span>
+      <span class="vb-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 2.5 4.5 5.5v5.2c0 4.6 3.2 8.9 7.5 10.3 4.3-1.4 7.5-5.7 7.5-10.3V5.5L12 2.5Z" stroke="#0B5D3B" stroke-width="1.8" stroke-linejoin="round"/><path d="m8.8 11.8 2.2 2.2 4.2-4.4" stroke="#0B5D3B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       <div class="vb-text"><b data-i18n="verify_missing_t">Add your verification badge</b><span data-i18n="verify_missing_s">Build trust with room seekers</span></div>
       <span class="vb-cta" data-i18n="verify_cta">Get Verified ›</span>
     </div>
 
     <div class="premium-banner" id="premiumBanner">
-      <span class="vb-icon">👑</span>
+      <span class="vb-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="m3 8 4.2 3.4L12 5l4.8 6.4L21 8l-1.6 9.5H4.6L3 8Z" stroke="#E8890C" stroke-width="1.8" stroke-linejoin="round"/></svg></span>
       <div class="vb-text"><b id="premiumBannerTitle" data-i18n="premium_banner_t">Basera Premium लें</b><span id="premiumBannerSub" data-i18n="premium_banner_s">Ad-free अनुभव + प्रायोरिटी सपोर्ट</span></div>
       <span class="vb-cta" id="premiumBannerCta" data-i18n="premium_banner_cta">अभी लें ›</span>
     </div>
 
     <div class="menu-list" id="profileMenu">
       <div class="menu-item" data-action="billing">
-        <span class="mi-icon">🧾</span>
+        <span class="mi-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 3h12v18l-2-1.4-2 1.4-2-1.4L10 21l-2-1.4L6 21V3Z" stroke="#2E6FD8" stroke-width="1.7" stroke-linejoin="round"/><path d="M9 8h6M9 11.5h6M9 15h3.5" stroke="#2E6FD8" stroke-width="1.7" stroke-linecap="round"/></svg></span>
         <div class="mi-text"><b data-i18n="menu_billing_t">पैकेज खरीदें और मेरे ऑर्डर</b><span data-i18n="menu_billing_s">पैकेज, ऑर्डर, बिलिंग और चालान</span></div>
         <span class="mi-chev">›</span>
       </div>
       <div class="menu-item" data-action="myads">
-        <span class="mi-icon">📋</span>
+        <span class="mi-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="5" y="4.5" width="14" height="17" rx="2" stroke="#E8890C" stroke-width="1.7"/><path d="M9 4.5a3 3 0 0 1 6 0" stroke="#E8890C" stroke-width="1.7"/><path d="M9 10.5h6M9 14h6M9 17.5h3.5" stroke="#E8890C" stroke-width="1.7" stroke-linecap="round"/></svg></span>
         <div class="mi-text"><b data-i18n="menu_myads_t">मेरी पोस्टिंग्स</b><span data-i18n="menu_myads_s">आपके सभी रूम / फ्लैट, फ्री में लाइव</span></div>
         <span class="mi-chev">›</span>
       </div>
       <div class="menu-item" data-action="wishlist">
-        <span class="mi-icon">♡</span>
+        <span class="mi-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 20.5S4 15.3 4 9.8A4.3 4.3 0 0 1 12 7a4.3 4.3 0 0 1 8 2.8c0 5.5-8 10.7-8 10.7Z" stroke="#0B8A5A" stroke-width="1.7" stroke-linejoin="round"/></svg></span>
         <div class="mi-text"><b data-i18n="menu_wishlist_t">इच्छा सूची</b><span data-i18n="menu_wishlist_s">यहाँ अपने पसंद किए गए आइटम देखें</span></div>
         <span class="mi-chev">›</span>
       </div>
-      <div class="menu-item elite" data-action="eliteBuyer" id="eliteBuyerRow">
-        <span class="mi-icon">📞</span>
+      <div class="menu-item elite elite-buyer" data-action="eliteBuyer" id="eliteBuyerRow">
+        <span class="mi-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6.8 3.5c.6 0 1.7 2 1.7 2.7 0 1.4-1.7 1.6-1.7 2.7 0 1.5 2.4 4.6 4 5.4 1 .5 1.2-1.3 2.5-1.3.7 0 2.9 1.3 2.9 1.9 0 1.7-1.6 3.1-3.2 3.1-2.7 0-9.4-5.6-9.4-9.6 0-1.6 1.5-4.9 3.2-4.9Z" fill="#0B5D3B"/></svg></span>
         <div class="mi-text"><b id="eliteBuyerTitle">एलीट खरीदार बनें</b><span id="eliteBuyerSub" data-i18n="elite_buyer_s">मालिकों को सीधे कॉल करें</span></div>
         <span class="mi-chev">›</span>
       </div>
       <div class="menu-item elite" data-action="eliteSeller" id="eliteSellerRow">
-        <span class="mi-icon">⚡</span>
+        <span class="mi-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M13 2.5 4.5 13.5H11L9.5 21.5 19 10h-6.5l.5-7.5Z" stroke="#E8890C" stroke-width="1.7" stroke-linejoin="round"/></svg></span>
         <div class="mi-text">
           <b id="eliteSellerTitle">एलीट विक्रेता बनें <span class="new-badge" id="eliteSellerNewBadge" data-i18n="new_badge">New</span></b>
           <span id="eliteSellerSub" data-i18n="elite_seller_s">बायर्स से तुरंत कॉल अनलॉक करें</span>
@@ -1216,28 +1239,28 @@ img{height:auto;}
         <span class="mi-chev">›</span>
       </div>
       <div class="menu-item" data-action="refer">
-        <span class="mi-icon">🎁</span>
+        <span class="mi-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="4" y="9" width="16" height="11" rx="1.5" stroke="#0B8A5A" stroke-width="1.7"/><path d="M12 9v11M4 13h16" stroke="#0B8A5A" stroke-width="1.7"/><path d="M12 9c-2 0-4-1.2-4-2.8C8 4.8 9.3 4 10.2 4c1.2 0 1.8 1.4 1.8 3 0-1.6.6-3 1.8-3 .9 0 2.2.8 2.2 2.2C16 7.8 14 9 12 9Z" stroke="#0B8A5A" stroke-width="1.7" stroke-linejoin="round"/></svg></span>
         <div class="mi-text"><b data-i18n="menu_refer_t">दोस्तों को बुलाएँ</b><span data-i18n="menu_refer_s">Basera शेयर करें, अपना इलाका जोड़ें</span></div>
         <span class="mi-chev">›</span>
       </div>
       <div class="menu-item" data-action="settings">
-        <span class="mi-icon">⚙️</span>
+        <span class="mi-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="#0B5D3B" stroke-width="1.7"/><path d="M12 2.8v2.6M12 18.6v2.6M2.8 12h2.6M18.6 12h2.6M5.5 5.5l1.8 1.8M16.7 16.7l1.8 1.8M18.5 5.5l-1.8 1.8M7.3 16.7l-1.8 1.8" stroke="#0B5D3B" stroke-width="1.7" stroke-linecap="round"/></svg></span>
         <div class="mi-text"><b data-i18n="menu_settings_t">सेटिंग्स</b><span data-i18n="menu_settings_s">गोपनीयता और लॉग आउट</span></div>
         <span class="mi-chev">›</span>
       </div>
       <div class="menu-item" data-action="help">
-        <span class="mi-icon">🛟</span>
+        <span class="mi-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="#E8890C" stroke-width="1.7"/><circle cx="12" cy="12" r="3.5" stroke="#E8890C" stroke-width="1.7"/><path d="m9.5 9.5-3-3M14.5 9.5l3-3M9.5 14.5l-3 3M14.5 14.5l3 3" stroke="#E8890C" stroke-width="1.7"/></svg></span>
         <div class="mi-text"><b data-i18n="menu_help_t">सहायता और समर्थन</b><span data-i18n="menu_help_s">सहायता केंद्र और कानूनी शर्तें</span></div>
         <span class="mi-chev">›</span>
       </div>
       <div class="menu-item" data-action="lang">
-        <span class="mi-icon">🌐</span>
+        <span class="mi-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="#0B8A5A" stroke-width="1.7"/><path d="M3.5 12h17M12 3.5c-5.5 5-5.5 12 0 17M12 3.5c5.5 5 5.5 12 0 17" stroke="#0B8A5A" stroke-width="1.7"/></svg></span>
         <div class="mi-text"><b data-i18n="menu_lang_t">भाषा चुनें / Select Language</b><span id="currentLangLabel">हिन्दी</span></div>
         <span class="mi-chev">›</span>
       </div>
     </div>
 
-    <p class="no-sub-note" data-i18n="no_sub_note">Basera पर पोस्ट करना, ब्राउज़ करना और मालिक से बात करना हमेशा फ्री है — कोई पैकेज, कोई सब्सक्रिप्शन नहीं। ऐप सिर्फ ऊपर दिखाए गए विज्ञापनों से चलता है।</p>
+    <p class="no-sub-note"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2.5 4.5 5.5v5.2c0 4.6 3.2 8.9 7.5 10.3 4.3-1.4 7.5-5.7 7.5-10.3V5.5L12 2.5Z" fill="#0B5D3B"/><path d="m8.8 11.8 2.2 2.2 4.2-4.4" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="no_sub_note">Basera पर पोस्ट करना, ब्राउज़ करना और मालिक से बात करना हमेशा फ्री है — कोई पैकेज, कोई सब्सक्रिप्शन नहीं। ऐप सिर्फ ऊपर दिखाए गए विज्ञापनों से चलता है।</span></p>
   </div>
 </div>
 
