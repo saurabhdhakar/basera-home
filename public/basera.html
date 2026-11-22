@@ -672,6 +672,7 @@ header.top{
 #chatsListBody{flex:1; display:flex; flex-direction:column; min-height:0;}
 .chats-empty{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:22px; min-height:350px; padding-bottom:48px;}
 .chat-search-art{width:190px; height:190px; object-fit:contain; flex-shrink:0;}
+.chats-empty h3{margin:0; font-size:19px; font-weight:800;}
 .chats-empty p{max-width:340px; font-size:16px; line-height:1.75;}
 .chat-empty-action.btn{width:auto; min-width:220px; max-width:100%; min-height:48px; padding:12px 22px; border-radius:4px; background:var(--chat-action); color:var(--chat-on-action); font-size:15px; font-weight:700;}
 .chat-empty-action:active,.chat-filter:active,.chat-tab:active{transform:scale(.98);}
@@ -1359,14 +1360,7 @@ img{height:auto;}
   </div>
   <section class="chat-filters-section" aria-label="त्वरित फ़िल्टर">
     <h3 data-i18n="chat_quick_filters">त्वरित फ़िल्टर</h3>
-    <div class="chat-quick-filters">
-      <button type="button" class="chat-filter" data-chat-filter="all" aria-pressed="true" data-i18n="chat_filter_all">सभी</button>
-      <button type="button" class="chat-filter" data-chat-filter="matched" aria-pressed="false" data-i18n="chat_filter_matched">OLX Matched Sellers</button>
-      <button type="button" class="chat-filter" data-chat-filter="unread" aria-pressed="false" data-i18n="chat_filter_unread">नहीं पढ़े गए</button>
-      <button type="button" class="chat-filter" data-chat-filter="important" aria-pressed="false" data-i18n="chat_filter_important">महत्वपूर्ण</button>
-      <button type="button" class="chat-filter" data-chat-filter="eliteBuyer" aria-pressed="false" data-i18n="chat_filter_elite_buyer">Elite Buyer</button>
-      <button type="button" class="chat-filter" data-chat-filter="eliteSeller" aria-pressed="false" data-i18n="chat_filter_elite_seller">Elite Seller</button>
-    </div>
+    <div class="chat-quick-filters" id="chatQuickFilters"></div>
   </section>
   <div id="chatsListBody" role="tabpanel" aria-labelledby="chatBuyingTab" aria-live="polite"></div>
 </div>
@@ -1822,6 +1816,9 @@ var I18N = {
     toast_ad_submit_failed:"पोस्ट नहीं हो पाया। दोबारा कोशिश करें।",
     toast_ad_submitting:"फोटो अपलोड हो रही हैं...",
     chats_title:"चैट",
+    chat_f_matched_props:"मैच्ड प्रॉपर्टीज़", chat_f_matched_tenants:"मैच्ड किरायेदार",
+    chat_empty_rent_h:"अभी कोई बातचीत नहीं!", chat_empty_rent_p:"जब आप किसी प्रॉपर्टी मालिक से संपर्क करेंगे, आपकी बातचीत यहाँ दिखेगी।", chat_empty_rent_btn:"प्रॉपर्टी देखें",
+    chat_empty_list_h:"अभी कोई पूछताछ नहीं!", chat_empty_list_p:"जब कोई आपकी किराये की प्रॉपर्टी के बारे में संपर्क करेगा, उनकी बातचीत यहाँ दिखेगी।", chat_empty_list_btn:"प्रॉपर्टी पोस्ट करें",
     chat_tab_buying:"खरीदना", chat_tab_selling:"बेचना", chat_quick_filters:"त्वरित फ़िल्टर",
     chat_filter_all:"सभी", chat_filter_matched:"OLX Matched Sellers", chat_filter_unread:"नहीं पढ़े गए",
     chat_filter_important:"महत्वपूर्ण", chat_filter_elite_buyer:"Elite Buyer", chat_filter_elite_seller:"Elite Seller",
@@ -2063,6 +2060,9 @@ var I18N = {
     toast_ad_submit_failed:"Couldn't post. Please try again.",
     toast_ad_submitting:"Uploading photos...",
     chats_title:"Chats",
+    chat_f_matched_props:"Matched Properties", chat_f_matched_tenants:"Matched Tenants",
+    chat_empty_rent_h:"No conversations yet!", chat_empty_rent_p:"When you contact a property owner, your conversations will appear here.", chat_empty_rent_btn:"Explore Properties",
+    chat_empty_list_h:"No inquiries yet!", chat_empty_list_p:"When someone contacts you about your rental property, their conversations will appear here.", chat_empty_list_btn:"Post a Property",
     chat_tab_buying:"Renting", chat_tab_selling:"Listing", chat_quick_filters:"Quick Filters",
     chat_filter_all:"All", chat_filter_matched:"OLX Matched Sellers", chat_filter_unread:"Unread",
     chat_filter_important:"Important", chat_filter_elite_buyer:"Elite Buyer", chat_filter_elite_seller:"Elite Seller",
@@ -4235,7 +4235,24 @@ function chatThumbHTML(chat){
   return '<div style="width:100%;height:100%;background:linear-gradient(135deg,'+g[0]+','+g[1]+');"></div>';
 }
 
-var chatListState = { tab:'buying', filter:'all' };
+var CHAT_TAB_FILTERS = {
+  buying:[['all','chat_filter_all'],['matchedProperties','chat_f_matched_props'],['unread','chat_filter_unread'],['important','chat_filter_important'],['eliteSeller','chat_filter_elite_seller']],
+  selling:[['all','chat_filter_all'],['matchedTenants','chat_f_matched_tenants'],['unread','chat_filter_unread'],['important','chat_filter_important'],['eliteBuyer','chat_filter_elite_buyer']]
+};
+var chatListState = { tab:'buying', filters:{buying:'all', selling:'all'} };
+function renderChatFilters(){
+  var tab = chatListState.tab, cur = chatListState.filters[tab];
+  var box = document.getElementById('chatQuickFilters');
+  box.innerHTML = CHAT_TAB_FILTERS[tab].map(function(f){
+    return '<button type="button" class="chat-filter" data-chat-filter="'+f[0]+'" aria-pressed="'+(f[0]===cur)+'">'+t(f[1])+'</button>';
+  }).join('');
+}
+document.getElementById('chatQuickFilters').addEventListener('click', function(e){
+  var button = e.target.closest('[data-chat-filter]'); if(!button) return;
+  var tab = chatListState.tab, filter = button.getAttribute('data-chat-filter');
+  chatListState.filters[tab] = chatListState.filters[tab] === filter ? 'all' : filter;
+  renderChatsList();
+});
 function selectChatTab(tab){
   chatListState.tab = tab;
   document.getElementById('chatTabs').setAttribute('data-tab', tab);
@@ -4257,20 +4274,11 @@ document.querySelectorAll('[data-chat-tab]').forEach(function(button){
     document.querySelector('[data-chat-tab="'+tab+'"]').focus();
   });
 });
-document.querySelectorAll('[data-chat-filter]').forEach(function(button){
-  button.addEventListener('click', function(){
-    var filter = button.getAttribute('data-chat-filter');
-    chatListState.filter = chatListState.filter === filter ? 'all' : filter;
-    document.querySelectorAll('[data-chat-filter]').forEach(function(chip){
-      chip.setAttribute('aria-pressed', String(chip.getAttribute('data-chat-filter') === chatListState.filter));
-    });
-    renderChatsList();
-  });
-});
 function chatMatchesFilters(chat){
   if((chat.role === 'selling' ? 'selling' : 'buying') !== chatListState.tab) return false;
-  switch(chatListState.filter){
-    case 'matched': return chat.matchedSeller === true;
+  switch(chatListState.filters[chatListState.tab]){
+    case 'matchedProperties': return chat.matchedProperty === true || chat.matchedSeller === true;
+    case 'matchedTenants': return chat.matchedTenant === true || chat.matchedBuyer === true;
     case 'unread': return chat.unread === true || chat.unreadCount > 0;
     case 'important': return chat.important === true;
     case 'eliteBuyer': return chat.eliteBuyer === true;
@@ -4279,6 +4287,7 @@ function chatMatchesFilters(chat){
   }
 }
 function renderChatsList(){
+  renderChatFilters();
   var chats = getChats();
   var rows = Object.keys(chats).map(function(k){ return chats[k]; }).filter(chatMatchesFilters)
     .sort(function(a,b){
@@ -4291,8 +4300,9 @@ function renderChatsList(){
     var buying = chatListState.tab === 'buying';
     body.innerHTML = '<div class="chats-empty">'+
       '<img class="chat-search-art" src="/assets/chat-search.png" width="190" height="190" alt="'+t('chat_illustration_alt')+'">'+
-      '<p>'+t(buying ? 'chat_empty_buying' : 'chat_empty_selling')+'</p>'+
-      '<button type="button" class="btn chat-empty-action" id="chatEmptyAction">'+t(buying ? 'chat_start_messaging' : 'chat_start_selling')+'</button></div>';
+      '<h3>'+t(buying ? 'chat_empty_rent_h' : 'chat_empty_list_h')+'</h3>'+
+      '<p>'+t(buying ? 'chat_empty_rent_p' : 'chat_empty_list_p')+'</p>'+
+      '<button type="button" class="btn chat-empty-action" id="chatEmptyAction">'+t(buying ? 'chat_empty_rent_btn' : 'chat_empty_list_btn')+'</button></div>';
     document.getElementById('chatEmptyAction').addEventListener('click', function(){
       if(buying){ closeAllScreens(); window.scrollTo({top:0, behavior:'instant'}); }
       else { openPost(); }
